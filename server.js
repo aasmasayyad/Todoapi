@@ -39,7 +39,8 @@ app.get('/todos',function(req,res){
 
 //GET /todos /ID
 
-app.get ('/todos/:id', function(req,res){
+app.get ('/todos/:id', function(req,res
+){
   var todoid = parseInt(req.params.id,10);
   console.log('todos array=' +  todos);
   console.log('todoid=' + todoid);
@@ -56,7 +57,7 @@ app.get ('/todos/:id', function(req,res){
     if (matchedtodo)
     {
       console.log('in matched todo'); 
-      res.json(todos);
+      res.json(matchedtodo);
     }
      else
        {
