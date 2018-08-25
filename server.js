@@ -4,10 +4,11 @@ var PORT =process.env.PORT || 3000;
 var bodyParser =  require('body-parser');
 var todos = [];
 var todoNextId = 1;
+var _= require('underscore');
 
 app.use(bodyParser.json());
-/*
-var todos= [{
+
+/*var todos= [{
   id:1,
   description : 'Meet Mom for Lunch',
   completed : false
@@ -20,12 +21,12 @@ var todos= [{
    id : 3,
    description : 'Feed the cat',
    completed: true
-}];  
+}]; */  
 
   app.get ('/',function(req,res){
     res.send('Todo API Root');
   }
-);   */
+);   
 
 /*
 app.get ('/todos',function(req,res){
@@ -40,33 +41,56 @@ app.get('/todos',function(req,res){
 
 app.get ('/todos/:id', function(req,res){
   var todoid = parseInt(req.params.id,10);
-  var matchedtodo ;
+  console.log('todos array=' +  todos);
+  console.log('todoid=' + todoid);
+  var matchedtodo = _.findWhere(todos,{id:todoid});
+  console.log('matchedtodo=' + matchedtodo);
   
-  todos.forEach(function(todo){
-    if (todoid == todo.id)
-    {
-      matchedtodo= todo;
-    }
+  // todos.forEach(function(todo){
+  //   if (todoid == todo.id)
+  //   {
+  //     matchedtodo= todo;
+  //   }
  
 
     if (matchedtodo)
     {
-      res.json(todo);
+      console.log('in matched todo'); 
+      res.json(todos);
     }
      else
        {
+         console.log('in else');
          res.status(404).send(); 
       }
 
   }) ;
   
   // res.send ('Asking for  todo with Id of ' + req.params.id )
-});
+
 
 app.post('/todos', function (req,res){
+  console.log("in Post");
   var body = req.body;
-  console.log('description:' + body.description);
-  res.json(body.description);
+  //console.log('todos array=',  todos);
+  //console.log('description:' + body.description);
+  var body = _.pick (req.body,'description','completed');
+
+
+
+if (!_.isBoolean(body.completed ) || !_.isString(body.description) || (body.description.trim().length == 0) ) 
+  {
+    console.log('in status 400');
+    return res.status(400).send();
+  }
+  body.description= body.description.trim();
+
+  body.id = todoNextId++;
+
+  todos.push(body);
+   console.log('todos array=', todos);
+  // console.log('todos array=' +  todos[0].id +  ' ' + todos[0].description);
+    res.json(body);
 });
 
 app.listen(PORT,function(){
