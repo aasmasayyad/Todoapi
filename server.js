@@ -94,6 +94,22 @@ if (!_.isBoolean(body.completed ) || !_.isString(body.description) || (body.desc
     res.json(body);
 });
 
+app.delete('/todos/:id',function(req,res
+){
+  var todoid = parseInt(req.params.id,10);
+  var matchedtodo = _.findWhere(todos,{id:todoid});
+  console.log('matchedtodo=' + matchedtodo);
+  if (!matchedtodo)
+  {
+    res.status(404).json({"Error":"No todo item found by the Id"});
+  }
+  else
+  {
+     todos = _.without(todos,matchedtodo);
+     res.json(matchedtodo);
+  }
+ });
+
 app.listen(PORT,function(){
   console.log('Express Listening on Port ' + PORT + '!');
 });
