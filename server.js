@@ -33,8 +33,25 @@ app.get ('/todos',function(req,res){
   res.json(todos);
 }  ); */
 
+// Get todos ?completed = true;
+
 app.get('/todos',function(req,res){
-    res.json(todos);
+    var queryParams =   req.query;
+
+    var filteredtodos = todos;
+
+    //if has filtered property && completed = true
+     if (queryParams.hasOwnProperty('completed') && queryParams.completed == 'true')
+     {
+          filteredtodos = _.where(filteredtodos,{completed : true});    
+     }
+     else if (queryParams.hasOwnProperty('completed') && queryParams.completed == 'false')
+     {
+          filteredtodos = _.where(filteredtodos,{completed : false});    
+     }
+
+      
+    res.json(filteredtodos);
 } );
 
 //GET /todos /ID
